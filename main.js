@@ -3,7 +3,7 @@ var Init = function() {
     Game.points = 0;
 }
 
-var click = function() {
+document.getElementById("click").onclick = function() {
   points++;
   document.getElementById("count").innerHTML = points;
 }
