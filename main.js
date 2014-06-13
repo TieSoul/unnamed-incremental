@@ -1,26 +1,28 @@
 function Init() {  // Run each time we start up
     load();
+    
     save_timer = setInterval(save, 30*1000); // autosave every 30 seconds
     onunload = save; // autosave when leaving the page (e.g. closing the tab, going to another page, or reloading)
     
     document.getElementById("click").onclick = click;
     document.getElementById("reset").onclick = reset;
 }
-function newgame() { // Initialize a new game
-    Game = new Object();
-    Game.points = 0;
-    save();
-}
 
 function save() {
     localStorage.Game = JSON.stringify(Game);
 }
-function load() {
+function load() { // Load new or existing game
     if ('Game' in localStorage) {
         Game = JSON.parse(localStorage.Game);
     } else {
-        newgame();
+        Game = new Object();
     }
+    if ( !('points' in Game) )  {
+        Game.points = 0;
+    }
+    
+    Game.save_format_version = 1;
+    save();
     display();
 }
 
@@ -39,7 +41,9 @@ function click() {  //Makes the button increase point amount
 }
 function reset() {
     if (confirm("Are you sure you want to reset the game?")) {
-        newgame();
+        delete localStorage.Game;
+        delete Game;
+        load();
         display();
     }
 }
