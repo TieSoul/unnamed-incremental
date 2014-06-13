@@ -1,5 +1,5 @@
 var Init = function() {
-  var Game = new Object();
+  window.Game = new Object();
     Game.points = 0;
 }
 
