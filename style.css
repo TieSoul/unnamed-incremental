@@ -24,8 +24,8 @@
    position: absolute;
    top: 40px;
    right:600px;
-   width:2em;
-   height:1em;
+   width:10em;
+   height:4em;
    }
 #click:hover {
    border-color: #a12323;
