@@ -21,6 +21,7 @@
    text-decoration: none;
    vertical-align: middle;
    outline:0 !important;
+   position: 400px 100px;
    }
 #click:hover {
    border-color: #a12323;
@@ -31,3 +32,7 @@
    border-color: #de3535;
    background: #de3535;
    }
+
+#count {
+   position: 400px 50px;
+}
