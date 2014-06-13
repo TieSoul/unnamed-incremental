@@ -38,3 +38,8 @@
     top: 10px;
     text-align: center;
 }
+
+.topright {
+    font-size:60%;
+    text-align:right;
+}
