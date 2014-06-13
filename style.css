@@ -1,6 +1,6 @@
 #click {
    cursor: pointer;
-   border-top: 1px solid #ab2424;
+   border: 1px solid #ab2424;
    background: #cf7878;
    background: -webkit-gradient(linear, left top, left bottom, from(#d91111), to(#cf7878));
    background: -webkit-linear-gradient(top, #d91111, #cf7878);
@@ -23,11 +23,11 @@
    outline:0 !important;
    }
 #click:hover {
-   border-top-color: #a12323;
+   border-color: #a12323;
    background: #a12323;
    color: #ccc;
    }
 #click:active {
-   border-top-color: #de3535;
+   border-color: #de3535;
    background: #de3535;
    }
