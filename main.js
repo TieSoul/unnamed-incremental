@@ -12,7 +12,7 @@ var Beautify = function(num, floats) {
       num = floor(num) + "";
     }
     else num = numstring.substring(0,numstring.indexOf(".")-1) + afterFloat.substring(0,floats);
-    try {var beforeFloat = num.substring(0,numstring.indexOf(".")-1);} catch Error {}
+    try {var beforeFloat = num.substring(0,numstring.indexOf(".")-1);} catch SyntaxError {var beforeFloat;}
   }
 }
 
