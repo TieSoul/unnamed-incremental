@@ -21,7 +21,9 @@
    text-decoration: none;
    vertical-align: middle;
    outline:0 !important;
-   position: 400px 100px;
+   position: fixed;
+   top: 10px;
+   right:400px;
    }
 #click:hover {
    border-color: #a12323;
