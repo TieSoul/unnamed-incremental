@@ -1,4 +1,5 @@
 #click {
+   cursor: pointer;
    border-top: 1px solid #ab2424;
    background: #cf7878;
    background: -webkit-gradient(linear, left top, left bottom, from(#d91111), to(#cf7878));
