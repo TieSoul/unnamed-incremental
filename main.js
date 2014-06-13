@@ -4,8 +4,8 @@ var Init = function() {
 }
 
 document.getElementById("click").onclick = function() {
-  points++;
-  document.getElementById("count").innerHTML = points;
+  Game.points++;
+  document.getElementById("count").innerHTML = Game.points;
 }
 
 Init();
