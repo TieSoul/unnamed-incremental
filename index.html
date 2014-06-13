@@ -10,8 +10,21 @@
     <p class="topright">
       <a href="#" id="reset">Reset</a>
     </p>
-    <h1 id="count">0</h1>
-    <div style="text-align:center;"><button id="click">Generate Points!</button></div>
+    <table id="main">
+      <tr>
+        <td class="count" id="display_timber">Timber: 0</td>
+        <td><button class="click" id="click_timber">Harvest Timber</button></td>
+        <td><button class="click hidden" id="click_buytimber">Buy Timber</button></td>
+      </tr>
+      <tr>
+        <td class="count" id="display_lumber">Lumber: 0</td>
+        <td><button class="click disabled" id="click_lumber">Cut Lumber</button></td>
+      </tr>
+      <tr>
+        <td class="count" id="display_money">Money: 0</td>
+        <td><button class="click disabled" id="click_money">Sell Lumber</button></td>
+      </tr>
+    </table>
     <script type="text/javascript" src="main.js"></script>
   </body>
 </html>

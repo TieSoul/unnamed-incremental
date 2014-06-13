@@ -1,4 +1,17 @@
-#click {
+body {
+    font-size: 24px;
+    font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+}
+
+table#main {
+    margin-left: auto;
+    margin-right: auto;
+}
+td {
+    padding: 0.5em;
+}
+
+.click {
     cursor: pointer;
     border: 1px solid #ab2424;
     background: #cf7878;
@@ -7,10 +20,10 @@
     background: -moz-linear-gradient(top, #d91111, #cf7878);
     background: -ms-linear-gradient(top, #d91111, #cf7878);
     background: -o-linear-gradient(top, #d91111, #cf7878);
-    padding: 4.5px 9px;
-    -webkit-border-radius: 18px;
-    -moz-border-radius: 18px;
-    border-radius: 18px;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
     -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
     -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
     box-shadow: rgba(0,0,0,1) 0 1px 0;
@@ -21,25 +34,41 @@
     text-decoration: none;
     vertical-align: middle;
     outline:0 !important;
-    width:10em;
-    height:4em;
+    width: 100%;
 }
-#click:hover {
+.click:hover {
     border-color: #a12323;
     background: #a12323;
     color: #ccc;
 }
-#click:active {
+.click:active {
     border-color: #de3535;
     background: #de3535;
 }
 
-#count {
+.disabled, .disabled:hover, .disabled:active {
+    border: 1px solid #404040;
+    background: #808080;
+    background: -webkit-gradient(linear, left top, left bottom, from(#707070), to(#808080));
+    background: -webkit-linear-gradient(top, #707070, #808080);
+    background: -moz-linear-gradient(top, #707070, #808080);
+    background: -ms-linear-gradient(top, #707070, #808080);
+    background: -o-linear-gradient(top, #707070, #808080);
+    color: white;
+    cursor: default;
+}
+
+.count {
     top: 10px;
     text-align: center;
+    text-transform: capitalize;
 }
 
 .topright {
-    font-size:60%;
+    font-size:10px;
     text-align:right;
+}
+
+.hidden {
+    display: none;
 }
