@@ -20,6 +20,7 @@
    font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
    text-decoration: none;
    vertical-align: middle;
+   outline:0 !important;
    }
 #click:hover {
    border-top-color: #a12323;
