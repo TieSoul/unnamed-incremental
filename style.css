@@ -1,5 +1,31 @@
 #click {
-  width: 400;
-  height: 100;
-  color: red;
-}
+   border-top: 1px solid #ab2424;
+   background: #cf7878;
+   background: -webkit-gradient(linear, left top, left bottom, from(#d91111), to(#cf7878));
+   background: -webkit-linear-gradient(top, #d91111, #cf7878);
+   background: -moz-linear-gradient(top, #d91111, #cf7878);
+   background: -ms-linear-gradient(top, #d91111, #cf7878);
+   background: -o-linear-gradient(top, #d91111, #cf7878);
+   padding: 4.5px 9px;
+   -webkit-border-radius: 18px;
+   -moz-border-radius: 18px;
+   border-radius: 18px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 24px;
+   font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+#click:hover {
+   border-top-color: #a12323;
+   background: #a12323;
+   color: #ccc;
+   }
+#click:active {
+   border-top-color: #de3535;
+   background: #de3535;
+   }
