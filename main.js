@@ -32,7 +32,6 @@ function Beautify(what,floats)//turns 9999999 into 9,999,999; credits to Orteil 
 }
 document.getElementById("click").onclick = function() {  //Makes the button increase point amount
   Game.points++;
-  document.getElementById("count").innerHTML = Game.points; 
+  document.getElementById("count").innerHTML = Beautify(Game.points,1); 
 }
-document.getElementById("count").innerHTML = Beautify(1.0000001,5);
 Init();
