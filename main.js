@@ -135,7 +135,9 @@ function row_visibility(resource) {
 
 function display() {
     for (offer in prices) {
-        if (Game[prices[offer].pay_what] >= prices[offer].pay) {
+        if (Game[prices[offer].pay_what] >= prices[offer].pay && 
+            (offer != "gutter" || Game.barrels >= 1)) // Disable gutters button unless there's at least one barrel.
+        {
             enable_button(offer);
             Game.show[offer] = true;
         } else {
