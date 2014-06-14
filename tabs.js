@@ -1,12 +1,15 @@
 var Init = function() {
-    document.getElementById("mainTab").setAttribute("onclick", "switchTab(\"main\"");
-    document.getElementById("buildingsTab").setAttribute("onlick", "switchTab(\"main\"");
-}
-var tabList = [document.getElementById("main"),
-    document.getElementById("buildings")];
-var tabButtons = [document.getElementById("mainTab"),
-    document.getElementById("buildingsTab")];
-
+    tabButtons = [document.getElementById("mainTab"),
+                  document.getElementById("buildingsTab")];
+    tabList = [document.getElementById("main"),
+               document.getElementById("buildings")];
+    activeTab = "main";
+    document.getElementById("mainTab").onclick = function() {switchTab("main");};
+    document.getElementById("buildingsTab").onclick = function() {switchTab("buildings");};
+};
+var tabList;
+var tabButtons;
+var activeTab;
 
 var switchTab = function(tab) {
     for (var i=0;i<tabList.length;i++) {
@@ -17,6 +20,8 @@ var switchTab = function(tab) {
         }
     }
     document.getElementById(tab + "Tab").setAttribute("class", "tab-disabled");
+    if (activeTab != tab) document.getElementById(activeTab + "Tab").setAttribute("class", "tab");
+    activeTab = tab;
 };
 
 Init();
