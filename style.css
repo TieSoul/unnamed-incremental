@@ -73,6 +73,11 @@ td {
     display: none;
 }
 
+#message {
+    right: 1em;
+    position: absolute;
+}
+
 @media (max-width: 520px) {
     body, .click {
         font-size: 12px;

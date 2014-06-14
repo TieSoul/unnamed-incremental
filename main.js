@@ -29,6 +29,9 @@ function Init() {  // Run each time we start up
     }
     document.getElementById("click_timber").setAttribute("title", "Gather "+prices.timber.get+" "+names.timber+".");
     
+    document.getElementById("save").onclick = save;
+    document.getElementById("export").onclick = export_save;
+    document.getElementById("import").onclick = import_save;
     document.getElementById("reset").onclick = reset;
     
     load();
@@ -40,6 +43,8 @@ function Init() {  // Run each time we start up
 
 function save() {
     localStorage.Game = JSON.stringify(Game);
+    document.getElementById("message").innerHTML = "Saved."
+    setTimeout(function(){document.getElementById("message").innerHTML = ""}, 1000);
 }
 function load() { // Load new or existing game
     if ('Game' in localStorage) {
@@ -82,6 +87,19 @@ function load() { // Load new or existing game
     save();
     
     display();
+}
+function export_save() {
+    prompt("Copy this code and keep it somewhere safe.", btoa(unescape(encodeURIComponent(JSON.stringify(Game)))));
+}
+function import_save() {
+    try {
+        Game = JSON.parse(decodeURIComponent(escape(atob(prompt("Paste your save code here.", "")))));
+        save();
+        display();
+        alert("Import successful.")
+    } catch(e) {
+        alert("Import failed.");
+    }
 }
 
 function display() {
