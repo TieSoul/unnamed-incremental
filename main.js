@@ -2,19 +2,19 @@ function Init() {  // Run each time we start up
     // Bulk operations are less efficient in terms of input resources to output resources,
     // but more efficient in terms of resource processing per click.
     prices = {
-        timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber',  always_show:true },
-        lumber:        {pay:10,    get:1,   pay_what:'timber',    get_what:'lumber',  always_show:true },
-        money:         {pay:1,     get:10,  pay_what:'lumber',    get_what:'money',   always_show:true },
+        timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber'  },
+        buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber'  },
+        buybulktimber: {pay:100,   get:180, pay_what:'money',     get_what:'timber'  },
         
-        buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber',  always_show:false},
-        bulklumber:    {pay:100,   get:9,   pay_what:'timber',    get_what:'lumber',  always_show:false},
+        lumber:        {pay:10,    get:1,   pay_what:'timber',    get_what:'lumber'  },
+        bulklumber:    {pay:100,   get:9,   pay_what:'timber',    get_what:'lumber'  },
         
-        buybulktimber: {pay:100,   get:180, pay_what:'money',     get_what:'timber',  always_show:false},
-        bulkmoney:     {pay:10,    get:90,  pay_what:'lumber',    get_what:'money',   always_show:false},
-        sellwater:     {pay:100,   get:100, pay_what:'rainwater', get_what:'money',   always_Show:false},
+        money:         {pay:1,     get:10,  pay_what:'lumber',    get_what:'money'   },
+        bulkmoney:     {pay:10,    get:90,  pay_what:'lumber',    get_what:'money'   },
+        sellwater:     {pay:100,   get:100, pay_what:'rainwater', get_what:'money'   },
         
-        barrel:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'barrels', always_Show:false},
-        gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters', always_Show:false},
+        barrel:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'barrels'},
+        gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters'},
     }
     names = {
         timber: 'raw timber',
@@ -23,6 +23,12 @@ function Init() {  // Run each time we start up
         barrels: 'rain barrel', // The singulars and plurals here are somewhat brittle.
         gutters: 'rain gutter', // This should be improved at some point.
         rainwater: 'rainwater',
+    }
+    rows = {
+        timber:    ['timber', 'buytimber', 'buybulktimber'],
+        lumber:    ['lumber', 'bulklumber'],
+        money:     ['money', 'bulkmoney', 'sellwater'],
+        rainwater: ['barrel', 'gutter'],
     }
     
     for (var offer in prices) {
@@ -79,21 +85,27 @@ function load() { // Load new or existing game
         delete Game.show_buytimber
     }
     
-    for (resource in names) {
-        if ( !(resource in Game) ) {
-            Game[resource] = 0;
-        }
-    }
     for (offer in prices) {
         if ( !(offer in Game.show) ) {
-            Game.show[offer] = prices[offer].always_show;
+            Game.show[offer] = false;
         }
         if ( !(Game.show[offer]) ) {
             document.getElementById("click_"+offer).setAttribute("class", "click hidden");
         }
     }
+    for (resource in names) {
+        if ( !(resource in Game) ) {
+            Game[resource] = 0;
+        }
+        
+        // Always show rowless resources. The others will be overwritten by row_visibility.
+        Game.show["display_"+resource] = true;
+    }
+    for (resource in rows) {
+        row_visibility(resource);
+    }
     
-    Game.save_format_version = 4;
+    Game.save_format_version = 4; // Version 4: rainwater
     save();
     
     display();
@@ -112,11 +124,16 @@ function import_save() {
     }
 }
 
-function display() {
-    for (resource in names) {
-        display_stat(resource);
+function row_visibility(resource) {
+    var showme = false;
+    for (i in rows[resource]) {
+        var offer = Game.show[rows[resource][i]];
+        showme = showme || offer;
     }
-    
+    Game.show["display_"+resource] = showme;
+}
+
+function display() {
     for (offer in prices) {
         if (Game[prices[offer].pay_what] >= prices[offer].pay) {
             enable_button(offer);
@@ -124,12 +141,27 @@ function display() {
         } else {
             if (Game.show[offer] || Game[prices[offer].pay_what] >= prices[offer].pay/2) {
                 disable_button(offer);
+                Game.show[offer] = true;
             }
         }
+    }
+    
+    for (resource in rows) {
+        row_visibility(resource);
+    }
+    
+    for (resource in names) {
+        display_stat(resource);
     }
 }
 
 function display_stat(resource) {
+    if (Game.show["display_"+resource]) {
+        document.getElementById("display_"+resource).setAttribute("class", "count");
+    } else {
+        document.getElementById("display_"+resource).setAttribute("class", "count hidden");
+    }
+    
     if (resource == 'rainwater') {
         document.getElementById("display_"+resource).innerHTML = 
             resource+": "+Beautify(Game[resource],1)+"/"+Beautify((Game.barrels*100),1);
@@ -140,13 +172,13 @@ function display_stat(resource) {
 }
 
 function disable_button(id) {
-    element = document.getElementById("click_"+id)
+    var element = document.getElementById("click_"+id)
     if (element.getAttribute("class") != "click disabled") {
         element.setAttribute("class", "click disabled");
     }
 }
 function enable_button(id) {
-    element = document.getElementById("click_"+id)
+    var element = document.getElementById("click_"+id)
     if (element.getAttribute("class") != "click") {
         element.setAttribute("class", "click");
     }
@@ -159,7 +191,7 @@ function Beautify(what,floats) //will expand on this function later.
 
 function click(offer) {
     return function() {
-        if (Game[prices[offer].pay_what] >= prices[offer].pay) {
+        if (document.getElementById("click_"+offer).getAttribute("class") == "click") {
             Game[prices[offer].pay_what] -= prices[offer].pay;
             Game[prices[offer].get_what] += prices[offer].get;
             display();
