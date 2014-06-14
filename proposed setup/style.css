@@ -1,0 +1,117 @@
+body{
+    font-family: 'Droid Sans', sans-serif ;
+    color:#444;
+    text-align: center;
+}
+
+#click {
+    cursor: pointer;
+    border: 1px solid #ab2424;
+    background: #cf7878;
+    //background: -webkit-gradient(linear, left top, left bottom, from(#d91111), to(#cf7878));
+    //background: -webkit-linear-gradient(top, #d91111, #cf7878);
+    //background: -moz-linear-gradient(top, #d91111, #cf7878);
+    //background: -ms-linear-gradient(top, #d91111, #cf7878);
+    //background: -o-linear-gradient(top, #d91111, #cf7878);
+    padding: 4.5px 9px;
+    //-webkit-border-radius: 18px;
+    //-moz-border-radius: 18px;
+    //border-radius: 18px;
+    //-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+    //-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+    //box-shadow: rgba(0,0,0,1) 0 1px 0;
+    //text-shadow: rgba(0,0,0,.4) 0 1px 0;
+
+    font-size: 24px;
+    font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+    text-decoration: none;
+    vertical-align: middle;
+    //outline:0 !important;
+    //width:10em;
+    //height:4em;
+}
+#click:hover {
+    border-color: #a12323;
+    background: #a12323;
+    color: #ccc;
+}
+#click:active {
+    border-color: #de3535;
+    background: #de3535;
+}
+
+#count {
+    top: 10px;
+    text-align: center;
+}
+
+.topright {
+    font-size:60%;
+    text-align:right;
+}
+
+.inventory_slot {
+
+
+    padding:3px;
+    width: auto;
+    text-align: left;
+    background-color: #B3B3B3;
+    margin: 3px;
+}
+
+.widget_head {
+    width: auto;
+    height: 1.2em;
+    font-size: 1.2em;
+    background-color: #939393;
+    padding: 2px;
+    color: #DDD;
+}
+.left_widget {
+    position: relative;
+    width: 200px;
+    display:inline-block;
+    top:0;
+    vertical-align: top;
+}
+
+.center_widget {
+    position: relative;
+
+    width: 500px;
+    display:inline-block;
+
+    vertical-align: top;
+    background-color: red;
+}
+.right_widget {
+    position: relative;
+
+    display:inline-block;
+    vertical-align: top;
+    width: 200px;
+
+
+}
+.widget{
+
+    background-color: #D3D3D3;
+    margin:2px;
+    height: 300px;
+
+}
+
+#display {
+    background-color: #555555;
+
+    padding:1px;
+    display: inline-block;
+    margin: 0px auto;
+}
+
+#hud {
+    background-color: #D3D3D3;
+    height: 150px;
+    width: auto;
+}
