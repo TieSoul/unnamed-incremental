@@ -1,7 +1,14 @@
 function Init() {  // Run each time we start up
     // Bulk operations are less efficient in terms of input resources to output resources,
     // but more efficient in terms of resource processing per click.
+    // IMPORTANT: Need to find a way to bypass the capitalizing style for the prefixes; currently, prefixes are being
+    // capitalized as well.
     InitTabs();
+    prefixes = {
+        si:       ["K", "M", "G", "T", "P" , "E" , "Z" , "Y" ],
+        latin:    ["k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp"],
+        extlatin: ["thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion"]
+    };
     prices = {
         timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber'  },
         buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber'  },
@@ -15,7 +22,7 @@ function Init() {  // Run each time we start up
         sellwater:     {pay:100,   get:100, pay_what:'rainwater', get_what:'money'   },
         
         barrel:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'barrels'},
-        gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters'},
+        gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters'}
     };
     names = {
         timber: 'raw timber',
@@ -23,13 +30,13 @@ function Init() {  // Run each time we start up
         money: 'money',
         barrels: 'rain barrel', // The singulars and plurals here are somewhat brittle.
         gutters: 'rain gutter', // This should be improved at some point.
-        rainwater: 'rainwater',
+        rainwater: 'rainwater'
     };
     rows = {
         timber:    ['timber', 'buytimber', 'buybulktimber'],
         lumber:    ['lumber', 'bulklumber'],
         money:     ['money', 'bulkmoney', 'sellwater'],
-        rainwater: ['barrel', 'gutter'],
+        rainwater: ['barrel', 'gutter']
     };
     for (var offer in prices) {
         var p = prices[offer];
@@ -50,6 +57,7 @@ function Init() {  // Run each time we start up
     document.getElementById("reset").onclick = reset;
     
     load();
+    InitSettings(); //this needs to be after load to disable the active button.
     save_timer = setInterval(save, 30*1000); // autosave every 30 seconds
     tick_timer = setInterval(tick, 1000); // main loop
     onunload = save; // autosave when leaving the page (e.g. closing the tab, going to another page, or reloading)
@@ -76,5 +84,12 @@ function tick() { // Main loop.
     Game.rainwater = Math.min(Game.rainwater, (Game.barrels * prices.sellwater.pay));
     display();
 }
+
+var prices;
+var names;
+var rows;
+var save_timer;
+var tick_timer;
+var prefixes;
 
 Init();

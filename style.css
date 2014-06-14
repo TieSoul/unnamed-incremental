@@ -3,7 +3,7 @@ body {
     font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
 }
 
-table#main {
+table#main, table#settings {
     margin: 0 auto
 }
 td {
@@ -58,7 +58,7 @@ td {
 .count {
     top: 10px;
     text-align: right;
-    text-transform: capitalize;
+    text-transform: capitalize; /*Need to find a way to bypass this for the prefixes*/
 }
 
 .topright {

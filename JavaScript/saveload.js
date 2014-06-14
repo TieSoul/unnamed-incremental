@@ -1,6 +1,6 @@
 function save() {
     localStorage.Game = JSON.stringify(Game);
-    document.getElementById("message").innerHTML = "Saved."
+    document.getElementById("message").innerHTML = "Saved.";
     setTimeout(function(){document.getElementById("message").innerHTML = ""}, 1000);
 }
 
@@ -26,6 +26,10 @@ function load() { // Load new or existing game
         Game.show.buytimber = false;
         delete Game.show_buytimber
     }
+
+    if (!('activeDisplaySetting' in Game)) {
+        Game.activeDisplaySetting = '1,23';
+    }
     
     for (offer in prices) {
         if ( !(offer in Game.show) ) {
@@ -47,7 +51,7 @@ function load() { // Load new or existing game
         row_visibility(resource);
     }
     
-    Game.save_format_version = 4; // Version 4: rainwater
+    Game.save_format_version = 5; // Version 5: Display settings
     save();
     
     display();

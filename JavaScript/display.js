@@ -64,7 +64,33 @@ function enable_button(id) {
     }
 }
 
-function Beautify(what,floats) //will expand on this function later.
+function Beautify(what)
 {
-    return what;
+    if (Game.activeDisplaySetting == "1,23" || Game.activeDisplaySetting == "1.23") {
+        if (what.toString().indexOf('e') != -1) return what.toString();
+        var str = Math.round(what).toString();
+        var tempstr = str;
+        str = "";
+        while (tempstr.length > 3) {
+            if (Game.activeDisplaySetting == "1,23") {str = "," + tempstr.slice(-3, tempstr.length) + str;}
+            else str = "." + tempstr.slice(-3,tempstr.length) + str;
+            tempstr = tempstr.slice(0, -3);
+
+        }
+        str = tempstr + str;
+        return str;
+    }
+    else {
+        if (what < 1000) return what.toString();
+        if (what >= 1e27) return what.toString();
+        var prefix = Game.activeDisplaySetting;
+        var list = prefixes[prefix];
+        for (var i=0;i<list.length;i++) {
+            if (what >= Math.pow(10,3*(i+1))) {
+                var currentPrefix = list[i];
+                what /= 1000;
+            }
+        }
+        return what.toString() + " " + currentPrefix
+    }
 }

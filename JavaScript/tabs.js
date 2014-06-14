@@ -1,11 +1,14 @@
 var InitTabs = function() { //Initialize several values
     tabButtons = [document.getElementById("mainTab"),
-                  document.getElementById("buildingsTab")];
+                  document.getElementById("buildingsTab"),
+                  document.getElementById("settingsTab")];
     tabList = [document.getElementById("main"),
-               document.getElementById("buildings")];
+               document.getElementById("buildings"),
+               document.getElementById("settings")];
     activeTab = "main";
     document.getElementById("mainTab").onclick = function() {switchTab("main");};
     document.getElementById("buildingsTab").onclick = function() {switchTab("buildings");};
+    document.getElementById("settingsTab").onclick = function() {switchTab("settings");};
     switchTab("main");
 };
 var tabList;
