@@ -38,11 +38,11 @@ function Init() {  // Run each time we start up
         } catch(e) {
             alert(offer);
         }
-        document.getElementById("click_"+offer).setAttribute("title", "Get "+p.get+" "+names[p.get_what]+" for "+p.pay+" "+names[p.pay_what]+".");
+        set_title("click_"+offer, "Get "+p.get+" "+names[p.get_what]+" for "+p.pay+" "+names[p.pay_what]+".");
     }
-    document.getElementById("click_timber").setAttribute("title", "Gather "+prices.timber.get+" "+names.timber+".");
-    document.getElementById("click_barrel").setAttribute("title", "Costs "+prices.barrel.pay+" "+names.lumber+". Collects 1 "+names.rainwater+" per second. Holds up to "+prices.sellwater.pay+" "+names.rainwater+".");
-    document.getElementById("click_gutter").setAttribute("title", "Costs "+prices.gutter.pay+" "+names.lumber+". Collects 2 "+names.rainwater+" per second.");
+    set_title("click_timber", "Gather "+prices.timber.get+" "+names.timber+".");
+    set_title("click_barrel", "Costs "+prices.barrel.pay+" "+names.lumber+". Collects 1 "+names.rainwater+" per second. Holds up to "+prices.sellwater.pay+" "+names.rainwater+".");
+    set_title("click_gutter", "Costs "+prices.gutter.pay+" "+names.lumber+". Collects 2 "+names.rainwater+" per second.");
     
     document.getElementById("save").onclick = save;
     document.getElementById("export").onclick = export_save;
@@ -51,144 +51,14 @@ function Init() {  // Run each time we start up
     
     load();
     save_timer = setInterval(save, 30*1000); // autosave every 30 seconds
-    tick_timer = setInterval(tick, 1000);
+    tick_timer = setInterval(tick, 1000); // main loop
     onunload = save; // autosave when leaving the page (e.g. closing the tab, going to another page, or reloading)
     
     display();
 }
 
-function save() {
-    localStorage.Game = JSON.stringify(Game);
-    document.getElementById("message").innerHTML = "Saved."
-    setTimeout(function(){document.getElementById("message").innerHTML = ""}, 1000);
-}
-function load() { // Load new or existing game
-    if ('Game' in localStorage) {
-        Game = JSON.parse(localStorage.Game);
-    } else {
-        Game = new Object();
-    }
-    
-    if (Game.save_format_version==1) { // For version 2, change "points" to "timber".
-        Game.timber = Game.points;
-    }
-    if ('points' in Game) { // And clear out the old "points" stat.
-        delete Game.points;
-    }
-    
-    if ( !('show' in Game) ) {
-        Game.show = new Object();
-    }
-    
-    if ('show_buytimber' in Game) {
-        Game.show.buytimber = false;
-        delete Game.show_buytimber
-    }
-    
-    for (offer in prices) {
-        if ( !(offer in Game.show) ) {
-            Game.show[offer] = false;
-        }
-        if ( !(Game.show[offer]) ) {
-            document.getElementById("click_"+offer).setAttribute("class", "click hidden");
-        }
-    }
-    for (resource in names) {
-        if ( !(resource in Game) ) {
-            Game[resource] = 0;
-        }
-        
-        // Always show rowless resources. The others will be overwritten by row_visibility.
-        Game.show["display_"+resource] = true;
-    }
-    for (resource in rows) {
-        row_visibility(resource);
-    }
-    
-    Game.save_format_version = 4; // Version 4: rainwater
-    save();
-    
-    display();
-}
-function export_save() {
-    prompt("Copy this code and keep it somewhere safe.", btoa(unescape(encodeURIComponent(JSON.stringify(Game)))));
-}
-function import_save() {
-    try {
-        Game = JSON.parse(decodeURIComponent(escape(atob(prompt("Paste your save code here.", "")))));
-        save();
-        load();
-        alert("Import successful.")
-    } catch(e) {
-        alert("Import failed.");
-    }
-}
-
-function row_visibility(resource) {
-    var showme = false;
-    for (i in rows[resource]) {
-        var offer = Game.show[rows[resource][i]];
-        showme = showme || offer;
-    }
-    Game.show["display_"+resource] = showme;
-}
-
-function display() {
-    for (offer in prices) {
-        if (Game[prices[offer].pay_what] >= prices[offer].pay && 
-            (offer != "gutter" || Game.barrels >= 1)) // Disable gutters button unless there's at least one barrel.
-        {
-            enable_button(offer);
-            Game.show[offer] = true;
-        } else {
-            if (Game.show[offer] || Game[prices[offer].pay_what] >= prices[offer].pay/2) {
-                disable_button(offer);
-                Game.show[offer] = true;
-            }
-        }
-    }
-    
-    for (resource in rows) {
-        row_visibility(resource);
-    }
-    
-    for (resource in names) {
-        display_stat(resource);
-    }
-}
-
-function display_stat(resource) {
-    if (Game.show["display_"+resource]) {
-        document.getElementById("display_"+resource).setAttribute("class", "count");
-    } else {
-        document.getElementById("display_"+resource).setAttribute("class", "count hidden");
-    }
-    
-    if (resource == 'rainwater') {
-        document.getElementById("display_"+resource).innerHTML = 
-            resource+": "+Beautify(Game[resource],1)+"/"+Beautify((Game.barrels*100),1);
-    } else {
-        document.getElementById("display_"+resource).innerHTML = 
-            resource+": "+Beautify(Game[resource],1);
-    }
-}
-
-function disable_button(id) {
-    var element = document.getElementById("click_"+id)
-    if (element.getAttribute("class") != "click disabled") {
-        element.setAttribute("class", "click disabled");
-    }
-}
-function enable_button(id) {
-    var element = document.getElementById("click_"+id)
-    if (element.getAttribute("class") != "click") {
-        element.setAttribute("class", "click");
-    }
-}
-
-function Beautify(what,floats) //will expand on this function later.
-{
-    return what
+function set_title(id, title) { // Set title-text, also known as hovertext.
+    document.getElementById(id).setAttribute("title", title);
 }
 
 function click(offer) {
@@ -201,17 +71,9 @@ function click(offer) {
     }
 }
 
-function reset() {
-    if (confirm("Are you sure you want to reset the game?")) {
-        delete localStorage.Game;
-        delete Game;
-        load();
-    }
-}
-
 function tick() { // Main loop.
     Game.rainwater += (Game.barrels + (Game.gutters*2));
-    if (Game.rainwater > (Game.barrels * prices.sellwater.pay)) { Game.rainwater = (Game.barrels * prices.sellwater.pay); }
+    Game.rainwater = Math.min(Game.rainwater, (Game.barrels * prices.sellwater.pay));
     display();
 }
 
