@@ -1,30 +1,39 @@
 function Init() {  // Run each time we start up
-    prices = new Object();
+    // Bulk operations are less efficient in terms of input resources to output resources,
+    // but more efficient in terms of resource processing per click.
+    prices = {
+        timber:        {pay:0,   get:1,   pay_what:'timber', get_what:'timber', always_show:true },
+        lumber:        {pay:10,  get:1,   pay_what:'timber', get_what:'lumber', always_show:true },
+        money:         {pay:1,   get:10,  pay_what:'lumber', get_what:'money',  always_show:true },
+        
+        buytimber:     {pay:2,   get:4,   pay_what:'money',  get_what:'timber', always_show:false},
+        bulklumber:    {pay:100, get:9,   pay_what:'timber', get_what:'lumber', always_show:false},
+        
+        buybulktimber: {pay:100, get:180, pay_what:'money',  get_what:'timber', always_show:false},
+        bulkmoney:     {pay:10,  get:90,  pay_what:'lumber', get_what:'money',  always_show:false},
+    }
+    names = {
+        timber: 'raw timber',
+        lumber: 'lumber',
+        money: 'money',
+    }
     
-    prices.timber = {pay:0, get:1};
-    document.getElementById("click_timber").onclick = click_timber;
-    document.getElementById("click_timber").setAttribute("title", "Gather "+prices.timber.get+" raw timber.");
-    
-    prices.lumber = {pay:10, get:1};
-    document.getElementById("click_lumber").onclick = click_lumber;
-    document.getElementById("click_lumber").setAttribute("title", "Process "+prices.lumber.pay+" raw timber into "+prices.lumber.get+" lumber.");
-    
-    prices.money = {pay:1, get:10};
-    document.getElementById("click_money").onclick = click_money;
-    document.getElementById("click_money").setAttribute("title", "Sell "+prices.money.pay+" lumber for "+prices.money.get+" money.");
-    
-    prices.buytimber = {pay:2, get:4};
-    document.getElementById("click_buytimber").onclick = click_buytimber;
-    document.getElementById("click_buytimber").setAttribute("title", "Pay "+prices.buytimber.pay+" money for "+prices.buytimber.get+" raw timber.");
+    for (var offer in prices) {
+        var p = prices[offer];
+        try {
+            document.getElementById("click_"+offer).onclick = click(offer);
+        } catch(e) {
+            alert(offer);
+        }
+        document.getElementById("click_"+offer).setAttribute("title", "Get "+p.get+" "+names[p.get_what]+" for "+p.pay+" "+names[p.pay_what]+".");
+    }
+    document.getElementById("click_timber").setAttribute("title", "Gather "+prices.timber.get+" "+names.timber+".");
     
     document.getElementById("reset").onclick = reset;
     
-    
     load();
-    
     save_timer = setInterval(save, 30*1000); // autosave every 30 seconds
     onunload = save; // autosave when leaving the page (e.g. closing the tab, going to another page, or reloading)
-    
     
     display();
 }
@@ -45,59 +54,55 @@ function load() { // Load new or existing game
     if ('points' in Game) { // And clear out the old "points" stat.
         delete Game.points;
     }
-    if ( !('timber' in Game) ) {
-        Game.timber = 0;
+    
+    if ( !('show' in Game) ) {
+        Game.show = new Object();
     }
     
-    if ( !('lumber' in Game) ) {
-        Game.lumber = 0;
+    if ('show_buytimber' in Game) {
+        Game.show.buytimber = false;
+        delete Game.show_buytimber
     }
     
-    if ( !('money' in Game) ) {
-        Game.money = 0;
+    for (resource in names) {
+        if ( !(resource in Game) ) {
+            Game[resource] = 0;
+        }
+    }
+    for (offer in prices) {
+        if ( !(offer in Game.show) ) {
+            Game.show[offer] = prices[offer].always_show;
+        }
+        if ( !(Game.show[offer]) ) {
+            document.getElementById("click_"+offer).setAttribute("class", "click hidden");
+        }
     }
     
-    if ( !('show_buytimber' in Game) ) {
-        Game.show_buytimber = false;
-    }
-    
-    Game.save_format_version = 2;
+    Game.save_format_version = 3;
     save();
-    
-    document.getElementById("click_buytimber").setAttribute("class", "click hidden");
     
     display();
 }
 
 function display() {
-    display_stat('timber');
-    display_stat('lumber');
-    display_stat('money');
-    
-    if (Game.timber >= prices.lumber.pay) {
-        enable_button('lumber');
-    } else {
-        disable_button('lumber');
+    for (resource in names) {
+        display_stat(resource);
     }
     
-    if (Game.lumber >= prices.money.pay) {
-        enable_button('money');
-    } else {
-        disable_button('money');
-    }
-    
-    if (Game.money >= prices.buytimber.pay) {
-        enable_button('buytimber');
-        Game.show_buytimber = true;
-    } else {
-        if (Game.show_buytimber) {
-            disable_button('buytimber');
+    for (offer in prices) {
+        if (Game[prices[offer].pay_what] >= prices[offer].pay) {
+            enable_button(offer);
+            Game.show[offer] = true;
+        } else {
+            if (Game.show[offer] || Game[prices[offer].pay_what] >= prices[offer].pay/2) {
+                disable_button(offer);
+            }
         }
     }
 }
 
-function display_stat(key) {
-    document.getElementById("display_"+key).innerHTML = key+": "+Beautify(Game[key],1);
+function display_stat(resource) {
+    document.getElementById("display_"+resource).innerHTML = resource+": "+Beautify(Game[resource],1);
 }
 
 function disable_button(id) {
@@ -118,29 +123,13 @@ function Beautify(what,floats) //will expand on this function later.
     return what
 }
 
-function click_timber() {  // Harvest raw timber
-    Game.timber++;
-    display();
-}
-function click_lumber() { // Process raw timber into lumber
-    if (Game.timber >= prices.lumber.pay) {
-        Game.timber -= prices.lumber.pay;
-        Game.lumber += prices.lumber.get;
-        display();
-    }
-}
-function click_money() { // Sell lumber for money
-    if (Game.lumber >= prices.money.pay) {
-        Game.lumber -= prices.money.pay;
-        Game.money  += prices.money.get;
-        display();
-    }
-}
-function click_buytimber() { // Pay money for raw timber
-    if (Game.money  >= prices.buytimber.pay) {
-        Game.money  -= prices.buytimber.pay;
-        Game.timber += prices.buytimber.get;
-        display();
+function click(offer) {
+    return function() {
+        if (Game[prices[offer].pay_what] >= prices[offer].pay) {
+            Game[prices[offer].pay_what] -= prices[offer].pay;
+            Game[prices[offer].get_what] += prices[offer].get;
+            display();
+        }
     }
 }
 
@@ -149,7 +138,6 @@ function reset() {
         delete localStorage.Game;
         delete Game;
         load();
-        display();
     }
 }
 

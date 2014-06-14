@@ -72,3 +72,9 @@ td {
 .hidden {
     display: none;
 }
+
+@media (max-width: 520px) {
+    body, .click {
+        font-size: 12px;
+    }
+}
