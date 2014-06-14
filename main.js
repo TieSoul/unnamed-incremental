@@ -2,20 +2,27 @@ function Init() {  // Run each time we start up
     // Bulk operations are less efficient in terms of input resources to output resources,
     // but more efficient in terms of resource processing per click.
     prices = {
-        timber:        {pay:0,   get:1,   pay_what:'timber', get_what:'timber', always_show:true },
-        lumber:        {pay:10,  get:1,   pay_what:'timber', get_what:'lumber', always_show:true },
-        money:         {pay:1,   get:10,  pay_what:'lumber', get_what:'money',  always_show:true },
+        timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber',  always_show:true },
+        lumber:        {pay:10,    get:1,   pay_what:'timber',    get_what:'lumber',  always_show:true },
+        money:         {pay:1,     get:10,  pay_what:'lumber',    get_what:'money',   always_show:true },
         
-        buytimber:     {pay:2,   get:4,   pay_what:'money',  get_what:'timber', always_show:false},
-        bulklumber:    {pay:100, get:9,   pay_what:'timber', get_what:'lumber', always_show:false},
+        buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber',  always_show:false},
+        bulklumber:    {pay:100,   get:9,   pay_what:'timber',    get_what:'lumber',  always_show:false},
         
-        buybulktimber: {pay:100, get:180, pay_what:'money',  get_what:'timber', always_show:false},
-        bulkmoney:     {pay:10,  get:90,  pay_what:'lumber', get_what:'money',  always_show:false},
+        buybulktimber: {pay:100,   get:180, pay_what:'money',     get_what:'timber',  always_show:false},
+        bulkmoney:     {pay:10,    get:90,  pay_what:'lumber',    get_what:'money',   always_show:false},
+        sellwater:     {pay:100,   get:100, pay_what:'rainwater', get_what:'money',   always_Show:false},
+        
+        barrel:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'barrels', always_Show:false},
+        gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters', always_Show:false},
     }
     names = {
         timber: 'raw timber',
         lumber: 'lumber',
         money: 'money',
+        barrels: 'rain barrel', // The singulars and plurals here are somewhat brittle.
+        gutters: 'rain gutter', // This should be improved at some point.
+        rainwater: 'rainwater',
     }
     
     for (var offer in prices) {
@@ -28,6 +35,8 @@ function Init() {  // Run each time we start up
         document.getElementById("click_"+offer).setAttribute("title", "Get "+p.get+" "+names[p.get_what]+" for "+p.pay+" "+names[p.pay_what]+".");
     }
     document.getElementById("click_timber").setAttribute("title", "Gather "+prices.timber.get+" "+names.timber+".");
+    document.getElementById("click_barrel").setAttribute("title", "Costs "+prices.barrel.pay+" "+names.lumber+". Collects 1 "+names.rainwater+" per second. Holds up to "+prices.sellwater.pay+" "+names.rainwater+".");
+    document.getElementById("click_gutter").setAttribute("title", "Costs "+prices.gutter.pay+" "+names.lumber+". Collects 2 "+names.rainwater+" per second.");
     
     document.getElementById("save").onclick = save;
     document.getElementById("export").onclick = export_save;
@@ -36,6 +45,7 @@ function Init() {  // Run each time we start up
     
     load();
     save_timer = setInterval(save, 30*1000); // autosave every 30 seconds
+    tick_timer = setInterval(tick, 1000);
     onunload = save; // autosave when leaving the page (e.g. closing the tab, going to another page, or reloading)
     
     display();
@@ -83,7 +93,7 @@ function load() { // Load new or existing game
         }
     }
     
-    Game.save_format_version = 3;
+    Game.save_format_version = 4;
     save();
     
     display();
@@ -95,7 +105,7 @@ function import_save() {
     try {
         Game = JSON.parse(decodeURIComponent(escape(atob(prompt("Paste your save code here.", "")))));
         save();
-        display();
+        load();
         alert("Import successful.")
     } catch(e) {
         alert("Import failed.");
@@ -120,7 +130,13 @@ function display() {
 }
 
 function display_stat(resource) {
-    document.getElementById("display_"+resource).innerHTML = resource+": "+Beautify(Game[resource],1);
+    if (resource == 'rainwater') {
+        document.getElementById("display_"+resource).innerHTML = 
+            resource+": "+Beautify(Game[resource],1)+"/"+Beautify((Game.barrels*100),1);
+    } else {
+        document.getElementById("display_"+resource).innerHTML = 
+            resource+": "+Beautify(Game[resource],1);
+    }
 }
 
 function disable_button(id) {
@@ -157,6 +173,12 @@ function reset() {
         delete Game;
         load();
     }
+}
+
+function tick() { // Main loop.
+    Game.rainwater += (Game.barrels + (Game.gutters*2));
+    if (Game.rainwater > (Game.barrels * prices.sellwater.pay)) { Game.rainwater = (Game.barrels * prices.sellwater.pay); }
+    display();
 }
 
 Init();
