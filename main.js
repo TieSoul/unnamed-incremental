@@ -1,6 +1,7 @@
 function Init() {  // Run each time we start up
     // Bulk operations are less efficient in terms of input resources to output resources,
     // but more efficient in terms of resource processing per click.
+    InitTabs();
     prices = {
         timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber'  },
         buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber'  },
@@ -15,7 +16,7 @@ function Init() {  // Run each time we start up
         
         barrel:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'barrels'},
         gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters'},
-    }
+    };
     names = {
         timber: 'raw timber',
         lumber: 'lumber',
@@ -23,14 +24,13 @@ function Init() {  // Run each time we start up
         barrels: 'rain barrel', // The singulars and plurals here are somewhat brittle.
         gutters: 'rain gutter', // This should be improved at some point.
         rainwater: 'rainwater',
-    }
+    };
     rows = {
         timber:    ['timber', 'buytimber', 'buybulktimber'],
         lumber:    ['lumber', 'bulklumber'],
         money:     ['money', 'bulkmoney', 'sellwater'],
         rainwater: ['barrel', 'gutter'],
-    }
-    
+    };
     for (var offer in prices) {
         var p = prices[offer];
         try {

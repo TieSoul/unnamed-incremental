@@ -8,28 +8,29 @@ function row_visibility(resource) {
 }
 
 function display() {
-    for (offer in prices) {
-        if (Game[prices[offer].pay_what] >= prices[offer].pay && 
-            (offer != "gutter" || Game.barrels >= 1)) // Disable gutters button unless there's at least one barrel.
-        {
-            enable_button(offer);
-            Game.show[offer] = true;
-        } else {
-            if (Game.show[offer] ||
-                Game[prices[offer].pay_what] >= prices[offer].pay/2)
+    if (activeTab == "main") {
+        for (offer in prices) {
+            if (Game[prices[offer].pay_what] >= prices[offer].pay &&
+                (offer != "gutter" || Game.barrels >= 1)) // Disable gutters button unless there's at least one barrel.
             {
-                disable_button(offer);
+                enable_button(offer);
                 Game.show[offer] = true;
+            } else {
+                if (Game.show[offer] ||
+                    Game[prices[offer].pay_what] >= prices[offer].pay / 2) {
+                    disable_button(offer);
+                    Game.show[offer] = true;
+                }
             }
         }
-    }
-    
-    for (resource in rows) {
-        row_visibility(resource);
-    }
-    
-    for (resource in names) {
-        display_stat(resource);
+
+        for (resource in rows) {
+            row_visibility(resource);
+        }
+
+        for (resource in names) {
+            display_stat(resource);
+        }
     }
 }
 
