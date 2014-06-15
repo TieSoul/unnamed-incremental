@@ -88,12 +88,6 @@ hr{
     position: absolute;
 }
 
-@media (max-width: 640px) {
-    body, .click {
-        font-size: 12px;
-    }
-}
-
 button.tab {
     -moz-box-shadow:inset 0 1px 0 0 #099;
     -webkit-box-shadow:inset 0 1px 0 0 #099;
@@ -177,4 +171,17 @@ button.tab-disabled, button.tab-disabled:hover, button.tab-disabled:active {
     text-decoration:none;
     text-align:center;
     text-shadow:1px 1px 0 #4f4f4d;
+}
+
+.tabbar {
+    margin-top: -1.5em;
+}
+
+@media (max-width: 640px) {
+    body, .click {
+        font-size: 12px;
+    }
+    .tabbar {
+        margin-top: 0;
+    }
 }
