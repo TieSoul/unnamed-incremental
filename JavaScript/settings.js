@@ -1,15 +1,11 @@
 function InitSettings() {
-    displaySettings = [document.getElementById("1,23"),
-                       document.getElementById("1.23"),
-                       document.getElementById("si"),
-                       document.getElementById("latin"),
-                       document.getElementById("extlatin")];
-    document.getElementById(Game.activeDisplaySetting).setAttribute("class", "click disabled");
+    displaySettings = document.getElementsByClassName("display");
+    document.getElementById(Game.activeDisplaySetting).setAttribute("class", "click display disabled");
     for (var i=0;i<displaySettings.length;i++) {
         displaySettings[i].onclick = function() {
-            document.getElementById(Game.activeDisplaySetting).setAttribute("class", "click");
+            document.getElementById(Game.activeDisplaySetting).setAttribute("class", "click display");
             Game.activeDisplaySetting = this.id;
-            this.setAttribute("class", "click disabled");
+            this.setAttribute("class", "click display disabled");
         }
     }
 }
