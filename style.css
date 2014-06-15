@@ -3,7 +3,7 @@ body {
     font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
 }
 
-table#main, table#settings {
+table#main, table#settings, table#buybuildings {
     margin: 0 auto
 }
 

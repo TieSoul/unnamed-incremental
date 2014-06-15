@@ -24,7 +24,7 @@ function load() { // Load new or existing game
     
     if ('show_buytimber' in Game) {
         Game.show.buytimber = false;
-        delete Game.show_buytimber
+        delete Game.show_buytimber;
     }
 
     if (!('activeDisplaySetting' in Game)) {

@@ -39,6 +39,49 @@ function display() {
         for (resource in names) {
             display_stat(resource);
         }
+    } else if (activeTab == 'buildings') {
+        document.getElementById("timber-buildings").innerHTML = "Timber: " + Beautify(Game.timber);
+        document.getElementById("lumber-buildings").innerHTML = "Lumber: " + Beautify(Game.lumber);
+        document.getElementById("money-buildings" ).innerHTML = "Money: "  + Beautify(Game.money );
+        for (var building in buildings) {
+            var b = buildings[building];
+            var coststring = "";
+            var prodstring = "";
+            for (var cost in b.current_pay) {
+                if (cost < b.current_pay.length - 1 && cost > 0) {
+                    coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + ", ";
+                } else if (cost == 0 && b.current_pay.length == 1) {
+                    coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + " ";
+                } else {
+                    coststring += "and " + b.current_pay[cost] + " " + b.pay_what[cost] + " ";
+                }
+            }
+            for (var prod in b.produce) {
+                if (prod < b.produce.length - 1 && prod > 0) {
+                    prodstring += Beautify(b.produce[prod], true) + " " + b.produce_what[prod] + ", ";
+                } else if (prod == 0 && b.produce.length == 1) {
+                    prodstring += Beautify(b.produce[prod], true) + " " + b.produce_what[prod] + " ";
+                } else {
+                    prodstring += "and " + Beautify(b.produce[prod], true) + " " + b.produce_what[prod] + " ";
+                }
+            }
+            set_title("building-"+building, "Needs a " + b.require + ", costs "+ coststring + "and produces " + prodstring + "per second.");
+        }
+
+        for (var property in properties) {
+            b = properties[property];
+            var coststring = "";
+            for (var cost in b.current_pay) {
+                if (cost < b.current_pay.length - 1 && cost > 0) {
+                    coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + ", ";
+                } else if (cost == 0 && b.current_pay.length == 1) {
+                    coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost];
+                } else {
+                    coststring += "and " + Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost];
+                }
+            }
+            set_title("property-"+property, "Costs "+ coststring + ".")
+        }
     }
 }
 
@@ -72,16 +115,16 @@ function enable_button(id) {
     }
 }
 
-function Beautify(what)
+function Beautify(what, forcecomma)
 {
     what = Math.floor(what);
-    if (Game.activeDisplaySetting == "1,23" || Game.activeDisplaySetting == "1.23") {
+    if (Game.activeDisplaySetting == "1,23" || Game.activeDisplaySetting == "1.23" || forcecomma) {
         if (what.toString().indexOf('e') != -1) return what.toString();
         var str = Math.round(what).toString();
         var tempstr = str;
         str = "";
         while (tempstr.length > 3) {
-            if (Game.activeDisplaySetting == "1,23") {str = "," + tempstr.slice(-3, tempstr.length) + str;}
+            if (Game.activeDisplaySetting == "1,23" || forcecomma) {str = "," + tempstr.slice(-3, tempstr.length) + str;}
             else str = "." + tempstr.slice(-3,tempstr.length) + str;
             tempstr = tempstr.slice(0, -3);
 

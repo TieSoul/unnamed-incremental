@@ -7,6 +7,15 @@ function Init() {  // Run each time we start up
         latin:    ["k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp"],
         extlatin: ["thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion"]
     };
+
+    buildings = {
+        farm: {base_pay: [400], current_pay: [400], pay_what:['lumber'], require:'meadow', produce: [2], produce_what: ['money']}
+    };
+
+    properties = {
+        meadow: {base_pay: [2000], current_pay: [2000], pay_what:['money']}
+    };
+
     prices = {
         timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber'  },
         buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber'  },
@@ -22,6 +31,7 @@ function Init() {  // Run each time we start up
         barrel:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'barrels'},
         gutter:        {pay:500,   get:1,   pay_what:'lumber',     get_what:'gutters'}
     };
+
     names = {
         timber: 'raw timber',
         lumber: 'lumber',
@@ -30,12 +40,14 @@ function Init() {  // Run each time we start up
         gutters: 'rain gutter', // This should be improved at some point.
         rainwater: 'rainwater'
     };
+
     rows = {
         timber:    ['timber', 'buytimber', 'buybulktimber'],
         lumber:    ['lumber', 'bulklumber'],
         money:     ['money', 'bulkmoney', 'sellwater'],
         rainwater: ['barrel', 'gutter']
     };
+
     for (var offer in prices) {
         var p = prices[offer];
         try {
@@ -45,6 +57,8 @@ function Init() {  // Run each time we start up
         }
         set_title("click_"+offer, "Get "+p.get+" "+names[p.get_what]+" for "+p.pay+" "+names[p.pay_what]+".");
     }
+
+
     set_title("click_timber", "Gather "+prices.timber.get+" "+names.timber+".");
     set_title("click_barrel", "Costs "+prices.barrel.pay+" "+names.lumber+". Collects 1 "+names.rainwater+" per second. Holds up to "+prices.sellwater.pay+" "+names.rainwater+".");
     set_title("click_gutter", "Costs "+prices.gutter.pay+" "+names.lumber+". Collects 2 "+names.rainwater+" per second.");
@@ -89,5 +103,7 @@ var rows;
 var save_timer;
 var tick_timer;
 var prefixes;
+var buildings;
+var properties;
 
 Init();
