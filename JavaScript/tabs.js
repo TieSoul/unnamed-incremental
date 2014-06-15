@@ -1,10 +1,6 @@
 var InitTabs = function() { //Initialize several values
-    tabButtons = [document.getElementById("mainTab"),
-                  document.getElementById("buildingsTab"),
-                  document.getElementById("settingsTab")];
-    tabList = [document.getElementById("main"),
-               document.getElementById("buildings"),
-               document.getElementById("settings")];
+    tabButtons = document.getElementsByClassName("tab");
+    tabList = document.getElementsByClassName("tabcontent");
     activeTab = "main";
     document.getElementById("mainTab").onclick = function() {switchTab("main");};
     document.getElementById("buildingsTab").onclick = function() {switchTab("buildings");};
@@ -18,12 +14,12 @@ var activeTab;
 var switchTab = function(tab) {
     for (var i=0;i<tabList.length;i++) { //hides all tabs except the one you're switching to
         if (tabList[i].getAttribute("id") != tab) {
-            tabList[i].setAttribute("class", "hidden");
+            tabList[i].setAttribute("class", "tabcontent nodisplay");
         } else {
-            tabList[i].setAttribute("class", "");
+            tabList[i].setAttribute("class", "tabcontent");
         }
     }
-    document.getElementById(tab + "Tab").setAttribute("class", "tab-disabled");
+    document.getElementById(tab + "Tab").setAttribute("class", "tab tab-disabled");
     if (activeTab != tab) document.getElementById(activeTab + "Tab").setAttribute("class", "tab");
     activeTab = tab;
 };

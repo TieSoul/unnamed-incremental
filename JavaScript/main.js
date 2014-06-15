@@ -1,8 +1,6 @@
 function Init() {  // Run each time we start up
     // Bulk operations are less efficient in terms of input resources to output resources,
     // but more efficient in terms of resource processing per click.
-    // IMPORTANT: Need to find a way to bypass the capitalizing style for the prefixes; currently, prefixes are being
-    // capitalized as well.
     InitTabs();
     prefixes = {
         si:       ["K", "M", "G", "T", "P" , "E" , "Z" , "Y" ],

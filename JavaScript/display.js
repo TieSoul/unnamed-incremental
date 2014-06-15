@@ -66,6 +66,7 @@ function enable_button(id) {
 
 function Beautify(what)
 {
+    what = Math.floor(what);
     if (Game.activeDisplaySetting == "1,23" || Game.activeDisplaySetting == "1.23") {
         if (what.toString().indexOf('e') != -1) return what.toString();
         var str = Math.round(what).toString();
@@ -86,11 +87,14 @@ function Beautify(what)
         var prefix = Game.activeDisplaySetting;
         var list = prefixes[prefix];
         for (var i=0;i<list.length;i++) {
-            if (what >= Math.pow(10,3*(i+1))) {
+            if (what >= 1000) {
                 var currentPrefix = list[i];
                 what /= 1000;
             }
         }
-        return what.toString() + " " + currentPrefix
+        str = what.toString();
+        if (str.indexOf(".") != -1) {
+            return str.slice(0,str.indexOf('.')+4) + " <span style=\"text-transform: none;\">" + currentPrefix + "</span>"
+        }
     }
 }
