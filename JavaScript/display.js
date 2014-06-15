@@ -94,7 +94,9 @@ function Beautify(what)
         }
         str = what.toString();
         if (str.indexOf(".") != -1) {
-            return str.slice(0,str.indexOf('.')+4) + " <span style=\"text-transform: none;\">" + currentPrefix + "</span>"
+            return str.slice(0,str.indexOf('.')+4) + " <span style=\"text-transform: none;\">" + currentPrefix + "</span>";
+        } else {
+            return str + " <span style=\"text-transform: none;\">" + currentPrefix + "</span>";
         }
     }
 }
