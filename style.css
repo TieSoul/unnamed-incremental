@@ -6,6 +6,7 @@ body {
 table#main, table#settings {
     margin: 0 auto
 }
+
 td {
     padding: 0.5em;
 }
@@ -58,7 +59,7 @@ td {
 .count {
     top: 10px;
     text-align: right;
-    text-transform: capitalize; /*Need to find a way to bypass this for the prefixes*/
+    text-transform: capitalize;
 }
 
 .topright {
