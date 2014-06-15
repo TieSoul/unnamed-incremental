@@ -63,6 +63,12 @@ td {
     width: 35%;
 }
 
+hr{
+    height:1px;
+    padding:0px;
+    margin:0px;
+}
+
 .topright {
     font-size:10px;
     text-align:right;
