@@ -10,16 +10,24 @@ function row_visibility(resource) {
 function display() {
     if (activeTab == "main") {
         for (offer in prices) {
-            if (Game[prices[offer].pay_what] >= prices[offer].pay &&
-                (offer != "gutter" || Game.barrels >= 1)) // Disable gutters button unless there's at least one barrel.
-            {
-                enable_button(offer);
-                Game.show[offer] = true;
+            if (offer == 'timber' && Game.show[rows['timber'][2]] &&
+                Game.show[rows['lumber'][1]] &&
+                Game.show[rows['money' ][1]]  ) {
+                document.getElementById('cell_timber').setAttribute("class", "click nodisplay"); //Don't display Harvest Timber if all bulk buttons are visible.
+                                                                                                 //This is for aesthetic purposes.
             } else {
-                if (Game.show[offer] ||
-                    Game[prices[offer].pay_what] >= prices[offer].pay / 2) {
-                    disable_button(offer);
+                if (Game[prices[offer].pay_what] >= prices[offer].pay &&
+                    (offer != "gutter" || Game.barrels >= 1)) // Disable gutters button unless there's at least one barrel.
+
+                {
+                    enable_button(offer);
                     Game.show[offer] = true;
+                } else {
+                    if ((Game.show[offer] ||
+                        Game[prices[offer].pay_what] >= prices[offer].pay / 2)) {
+                        disable_button(offer);
+                        Game.show[offer] = true;
+                    }
                 }
             }
         }
