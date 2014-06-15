@@ -67,7 +67,11 @@ td {
 }
 
 .hidden {
-    display:none;
+    visibility: hidden;
+}
+
+.nodisplay {
+    display: none;
 }
 
 #message {
