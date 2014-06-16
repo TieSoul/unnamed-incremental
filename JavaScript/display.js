@@ -61,7 +61,7 @@ function display() {
                     is_active = false;
                 }
             }
-            if (Game.properties[b.require].amount <= b.amount) is_active = false;
+            if (Game.properties[b.require].amount == 0) is_active = false;
             if (is_active) {
                 enable_building(building);
             } else {
