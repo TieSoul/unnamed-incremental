@@ -54,8 +54,9 @@ function load() { // Load new or existing game
 
     if (!('buildings' in Game) || !('properties' in Game)) {
         Game.buildings = {
-            farm:       {base_pay: [400],     current_pay: [400],     pay_what: ['lumber'],          require: 'meadow', produce: [1], produce_what: ['money'] , amount: 0, name: 'farm'},
-            woodcutter: {base_pay: [500,600], current_pay: [500,600], pay_what: ['lumber','timber'], require: 'forest', produce: [2], produce_what: ['timber'], amount: 0, name: 'woodcutter hut'}
+            farm:       {base_pay: [400],      current_pay: [400],      pay_what: ['lumber'],          require: 'meadow', produce: [4], produce_what: ['money'] , amount: 0, name: 'farm'},
+            sawmill:    {base_pay: [1000],      current_pay: [1000],      pay_what: ['lumber'],          require: 'meadow', produce: [1], produce_what: ['lumber'], amount: 0, name: 'sawmill'},
+            woodcutter: {base_pay: [500,3000], current_pay: [500,3000], pay_what: ['lumber','timber'], require: 'forest', produce: [8], produce_what: ['timber'], amount: 0, name: 'woodcutter hut'}
         };
 
         Game.properties = {
@@ -96,6 +97,7 @@ function reset() {
     if (confirm("Are you sure you want to reset the game?")) {
         delete localStorage.Game;
         delete Game;
+        document.getElementById('cell_timber').setAttribute("class", "");
         load();
     }
 }

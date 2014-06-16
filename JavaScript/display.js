@@ -55,7 +55,7 @@ function display() {
                 } else if (cost == 0 && b.current_pay.length == 1 || cost == b.current_pay.length - 2) {
                     coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + " ";
                 } else {
-                    coststring += "and " + b.current_pay[cost] + " " + b.pay_what[cost] + " ";
+                    coststring += "and " + Beautify(b.current_pay[cost] , true) + " " + b.pay_what[cost] + " ";
                 }
                 if (Game[b.pay_what[cost]] < b.current_pay[cost]) {
                     is_active = false;
