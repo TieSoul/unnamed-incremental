@@ -2,9 +2,11 @@ function buy_building(building) {
     return function() {
         if (document.getElementById('building-'+building).getAttribute("class") == "click") {
             Game.buildings[building]['amount']++;
+            Game.properties[Game.buildings[building].require].amount--;
             for (var cost in Game.buildings[building].current_pay) {
                 eval("Game." + Game.buildings[building].pay_what[cost] + " -= Game.buildings[building].current_pay[cost]");
             }
+            update_properties();
             update_buildings();
             display();
         }
