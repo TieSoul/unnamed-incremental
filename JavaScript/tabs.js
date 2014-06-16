@@ -22,4 +22,5 @@ var switchTab = function(tab) {
     document.getElementById(tab + "Tab").setAttribute("class", "tab tab-disabled");
     if (activeTab != tab) document.getElementById(activeTab + "Tab").setAttribute("class", "tab");
     activeTab = tab;
+    display();
 };

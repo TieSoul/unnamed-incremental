@@ -1,4 +1,5 @@
 function save() {
+    Game.timeSignature = new Date().getTime();
     localStorage.Game = JSON.stringify(Game);
     document.getElementById("message").innerHTML = "Saved.";
     setTimeout(function(){document.getElementById("message").innerHTML = ""}, 1000);
@@ -24,7 +25,7 @@ function load() { // Load new or existing game
     
     if ('show_buytimber' in Game) {
         Game.show.buytimber = false;
-        delete Game.show_buytimber
+        delete Game.show_buytimber;
     }
 
     if (!('activeDisplaySetting' in Game)) {
@@ -50,10 +51,30 @@ function load() { // Load new or existing game
     for (resource in rows) {
         row_visibility(resource);
     }
+
+    if (!('buildings' in Game) || !('properties' in Game)) {
+        Game.buildings = {
+            farm:       {base_pay: [400],      current_pay: [400],      pay_what: ['lumber'],          require: 'meadow', produce: [4], produce_what: ['money'] , amount: 0, name: 'farm'},
+            sawmill:    {base_pay: [1000],      current_pay: [1000],      pay_what: ['lumber'],          require: 'meadow', produce: [1], produce_what: ['lumber'], amount: 0, name: 'sawmill'},
+            woodcutter: {base_pay: [500,3000], current_pay: [500,3000], pay_what: ['lumber','timber'], require: 'forest', produce: [8], produce_what: ['timber'], amount: 0, name: 'woodcutter hut'}
+        };
+
+        Game.properties = {
+            meadow: {base_pay: [2000], current_pay: [2000], pay_what: ['money'], amount: 0, name: 'meadow'},
+            forest: {base_pay: [3000], current_pay: [3000], pay_what: ['money'], amount: 0, name: 'forest'}
+        };
+    }
+
+    if ('timeSignature' in Game) {
+        update_buildings();
+        Game.lumber += building_income_lumber * ((new Date().getTime() - Game.timeSignature) / 1000);
+        Game.timber += building_income_timber * ((new Date().getTime() - Game.timeSignature) / 1000);
+        Game.money += building_income_money * ((new Date().getTime() - Game.timeSignature) / 1000);
+    }
     
-    Game.save_format_version = 5; // Version 5: Display settings
+    Game.save_format_version = 6; // Version 6: buildings
     save();
-    
+    update_buildings();
     display();
 }
 
@@ -76,6 +97,7 @@ function reset() {
     if (confirm("Are you sure you want to reset the game?")) {
         delete localStorage.Game;
         delete Game;
+        document.getElementById('cell_timber').setAttribute("class", "");
         load();
     }
 }
