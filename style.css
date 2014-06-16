@@ -89,7 +89,7 @@ hr{
 
 #message {
     left: 1em;
-    top: 0;
+    top: -0.5em;
     position: absolute;
 }
 
