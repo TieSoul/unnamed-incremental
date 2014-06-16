@@ -43,44 +43,66 @@ function display() {
         document.getElementById("timber-buildings").innerHTML = "Timber: " + Beautify(Game.timber);
         document.getElementById("lumber-buildings").innerHTML = "Lumber: " + Beautify(Game.lumber);
         document.getElementById("money-buildings" ).innerHTML = "Money: "  + Beautify(Game.money );
-        for (var building in buildings) {
-            var b = buildings[building];
+
+        for (var building in Game.buildings) {
+            var b = Game.buildings[building];
+            var is_active = true;
             var coststring = "";
             var prodstring = "";
             for (var cost in b.current_pay) {
-                if (cost < b.current_pay.length - 1 && cost > 0) {
+                if (cost < b.current_pay.length - 2 && b.current_pay.length > 1) {
                     coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + ", ";
-                } else if (cost == 0 && b.current_pay.length == 1) {
+                } else if (cost == 0 && b.current_pay.length == 1 || cost == b.current_pay.length - 2) {
                     coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + " ";
                 } else {
                     coststring += "and " + b.current_pay[cost] + " " + b.pay_what[cost] + " ";
                 }
+                if (Game[b.pay_what[cost]] < b.current_pay[cost]) {
+                    is_active = false;
+                }
+            }
+            if (Game.properties[b.require].amount <= b.amount) is_active = false;
+            if (is_active) {
+                enable_building(building);
+            } else {
+                disable_building(building);
             }
             for (var prod in b.produce) {
-                if (prod < b.produce.length - 1 && prod > 0) {
+                if (prod < b.produce.length - 2 && b.current_pay.length > 1) {
                     prodstring += Beautify(b.produce[prod], true) + " " + b.produce_what[prod] + ", ";
-                } else if (prod == 0 && b.produce.length == 1) {
+                } else if (prod == 0 && b.produce.length == 1 || cost == b.produce.length - 2) {
                     prodstring += Beautify(b.produce[prod], true) + " " + b.produce_what[prod] + " ";
                 } else {
                     prodstring += "and " + Beautify(b.produce[prod], true) + " " + b.produce_what[prod] + " ";
                 }
             }
             set_title("building-"+building, "Needs a " + b.require + ", costs "+ coststring + "and produces " + prodstring + "per second.");
+            document.getElementById("building-" + building).innerHTML = "<span style=\"text-transform: capitalize;\">" + b.name + "s: " + Beautify(b.amount) + "</span>";
         }
 
-        for (var property in properties) {
-            b = properties[property];
+        for (var property in Game.properties) {
+            b = Game.properties[property];
+            var is_active = true;
             var coststring = "";
             for (var cost in b.current_pay) {
-                if (cost < b.current_pay.length - 1 && cost > 0) {
+                if (cost < b.current_pay.length - 1 && b.current_pay.length > 1) {
                     coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost] + ", ";
-                } else if (cost == 0 && b.current_pay.length == 1) {
+                } else if (cost == 0 && b.current_pay.length == 1 || cost == b.current_pay.length - 2) {
                     coststring += Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost];
                 } else {
                     coststring += "and " + Beautify(b.current_pay[cost], true) + " " + b.pay_what[cost];
                 }
+                if (Game[b.pay_what[cost]] < b.current_pay[cost]) {
+                    is_active = false;
+                }
             }
-            set_title("property-"+property, "Costs "+ coststring + ".")
+            if (is_active) {
+                enable_property(property);
+            } else {
+                disable_property(property);
+            }
+            set_title("property-"+property, "Costs "+ coststring + ".");
+            document.getElementById("property-"+property).innerHTML = "<span style=\"text-transform: capitalize;\">" + property + "s: " + Beautify(b.amount) + "</span>";
         }
     }
 }
@@ -94,32 +116,60 @@ function display_stat(resource) {
     
     if (resource == 'rainwater') {
         document.getElementById("display_"+resource).innerHTML = 
-            resource+": "+Beautify(Game[resource],1)+"/"+Beautify((Game.barrels*100),1);
+            resource+": "+Beautify(Game[resource])+"/"+Beautify((Game.barrels*100));
     } else {
         document.getElementById("display_"+resource).innerHTML = 
-            resource+": "+Beautify(Game[resource],1);
+            resource+": "+Beautify(Game[resource]);
     }
 }
 
 function disable_button(id) {
-    var element = document.getElementById("click_"+id)
+    var element = document.getElementById("click_"+id);
     if (element.getAttribute("class") != "click disabled") {
         element.setAttribute("class", "click disabled");
     }
 }
 
 function enable_button(id) {
-    var element = document.getElementById("click_"+id)
+    var element = document.getElementById("click_"+id);
     if (element.getAttribute("class") != "click") {
         element.setAttribute("class", "click");
     }
 }
 
+function disable_building(id) {
+    var b = document.getElementById("building-"+id);
+    if (b.getAttribute("class") != "click disabled") {
+        b.setAttribute("class", "click disabled")
+    }
+}
+
+function enable_building(id) {
+    var b = document.getElementById("building-"+id);
+    if (b.getAttribute("class") != "click") {
+        b.setAttribute("class", "click")
+    }
+}
+
+function enable_property(id) {
+    var p = document.getElementById("property-"+id);
+    if (p.getAttribute("class") != "click") {
+        p.setAttribute("class", "click");
+    }
+}
+
+function disable_property(id) {
+    var p = document.getElementById("property-"+id);
+    if (p.getAttribute("class") != "click disabled") {
+        p.setAttribute("class", "click disabled");
+    }
+}
+
 function Beautify(what, forcecomma)
 {
-    what = Math.floor(what);
+    what = Math.round(what);
     if (Game.activeDisplaySetting == "1,23" || Game.activeDisplaySetting == "1.23" || forcecomma) {
-        if (what.toString().indexOf('e') != -1) return what.toString();
+        if (what.toString().indexOf('e') != -1 || what.toString().indexOf('I') != -1) return what.toString();
         var str = Math.round(what).toString();
         var tempstr = str;
         str = "";

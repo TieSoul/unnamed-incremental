@@ -8,14 +8,6 @@ function Init() {  // Run each time we start up
         extlatin: ["thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion"]
     };
 
-    buildings = {
-        farm: {base_pay: [400], current_pay: [400], pay_what:['lumber'], require:'meadow', produce: [2], produce_what: ['money']}
-    };
-
-    properties = {
-        meadow: {base_pay: [2000], current_pay: [2000], pay_what:['money']}
-    };
-
     prices = {
         timber:        {pay:0,     get:1,   pay_what:'timber',    get_what:'timber'  },
         buytimber:     {pay:2,     get:4,   pay_what:'money',     get_what:'timber'  },
@@ -59,6 +51,8 @@ function Init() {  // Run each time we start up
     }
 
 
+
+
     set_title("click_timber", "Gather "+prices.timber.get+" "+names.timber+".");
     set_title("click_barrel", "Costs "+prices.barrel.pay+" "+names.lumber+". Collects 1 "+names.rainwater+" per second. Holds up to "+prices.sellwater.pay+" "+names.rainwater+".");
     set_title("click_gutter", "Costs "+prices.gutter.pay+" "+names.lumber+". Collects 2 "+names.rainwater+" per second.");
@@ -73,7 +67,14 @@ function Init() {  // Run each time we start up
     save_timer = setInterval(save, 30*1000); // autosave every 30 seconds
     tick_timer = setInterval(tick, 1000); // main loop
     onunload = save; // autosave when leaving the page (e.g. closing the tab, going to another page, or reloading)
-    
+    for (var building in Game.buildings) {
+        var b = Game.buildings[building];
+        document.getElementById("building-"+building).onclick = buy_building(building);
+    }
+    for (var property in Game.properties) {
+        var p = Game.buildings[building];
+        document.getElementById("property-"+property).onclick = buy_property(property);
+    }
     display();
 }
 
@@ -94,6 +95,9 @@ function click(offer) {
 function tick() { // Main loop.
     Game.rainwater += (Game.barrels + (Game.gutters*2));
     Game.rainwater = Math.min(Game.rainwater, (Game.barrels * prices.sellwater.pay));
+    Game.timber += building_income_timber;
+    Game.lumber += building_income_lumber;
+    Game.money  += building_income_money ;
     display();
 }
 
@@ -103,7 +107,5 @@ var rows;
 var save_timer;
 var tick_timer;
 var prefixes;
-var buildings;
-var properties;
 
 Init();

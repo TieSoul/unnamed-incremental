@@ -7,6 +7,11 @@ table#main, table#settings, table#buybuildings {
     margin: 0 auto
 }
 
+table#buybuildings {
+    position: fixed;
+    left: 40%;
+}
+
 td {
     padding: 0.5em;
 }
